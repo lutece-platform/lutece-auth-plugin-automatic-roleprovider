@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.BiPredicate;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,6 +47,7 @@ import fr.paris.lutece.portal.business.role.Role;
 import fr.paris.lutece.portal.business.role.RoleHome;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 
 
@@ -59,6 +61,8 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
     private List<AutomaticRoleConfiguration> _listAutomaticRoleConfiguration;
     // Properties for page titles
     private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessage";
+    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessageAutomatic";
+    
     private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_ERROR = "automaticroleprovider.automaticRoleProvider.roleDescriptionError";
      
    
@@ -82,24 +86,17 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
     public Collection<String> providesRoles( LuteceUser user ) 
     {
        
-        
-      List<String> listRoles=new ArrayList<String>();
-      
-      if(this._listAutomaticRoleConfiguration!=null)
-      {
-			this._listAutomaticRoleConfiguration.forEach(x -> {
+    	 List<String> listRoles=new ArrayList<String>();
+    	 
+    	 if(this._listAutomaticRoleConfiguration!=null)
+         {
+   			this._listAutomaticRoleConfiguration.stream().filter(x->  x.getConfigurationPredicate().getPredicate().test(user, x)).forEach(x -> listRoles.add(x.getRole()));
 
-				if (!StringUtils.isEmpty(user.getUserInfo(x.getLuteceUserAttributeKey()))
-						&& x.getLuteceUserAttributeValue().toUpperCase()
-								.equals(user.getUserInfo(x.getLuteceUserAttributeKey()).toUpperCase())) {
-					listRoles.add(x.getRole());
-
-				}
-
-			});
-      }
-      
-      return listRoles;
+         }
+   	  
+   	  return listRoles;
+         
+  
     	
     }
     
@@ -116,10 +113,22 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
 			this._listAutomaticRoleConfiguration.forEach(x -> {
 				Role role = RoleHome.findByPrimaryKey(x.getRole());
 				if (role != null) {
-					lisDescriptions.add(
+					if(x.isAutomatic()!=null && x.isAutomatic() )
+					{
+						//Automatic assignment
+						lisDescriptions.add(
+								new LuteceUserRoleDescription(role, LuteceUserRoleDescription.TYPE_AUTOMATIC_ASSIGNMENT,
+										I18nService.getLocalizedString(PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC,locale)));
+				
+					}
+					else
+					{
+					//conditional assignment
+				 	lisDescriptions.add(
 							new LuteceUserRoleDescription(role, LuteceUserRoleDescription.TYPE_CONDITIONAL_ASSIGNMENT,
 									I18nService.getLocalizedString(PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE, new Object[]{x.getLuteceUserAttributeKey(), x.getLuteceUserAttributeValue()},locale)));
-				}
+					}
+			     }
 				else
 				{
 					Role roleEmty=new Role();
@@ -140,6 +149,8 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
     	return lisDescriptions;
     	
     }
+    
+    
     
        
     

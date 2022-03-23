@@ -34,26 +34,14 @@
 package fr.paris.lutece.plugins.automaticroleprovider.service;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class AutomaticRoleConfiguration.
  */
 public class AutomaticRoleConfiguration {
 
 	
-	/**
-	 * Instantiates a new automatic role configuration.
-	 *
-	 * @param strLuteceUserAttributeKey the str lutece user attribute key
-	 * @param strLuteceUserAttributeValue the str lutece user attribute value
-	 * @param strRole the str role
-	 */
-	public AutomaticRoleConfiguration(String strLuteceUserAttributeKey, String strLuteceUserAttributeValue,
-			String strRole) {
-		super();
-		this._strLuteceUserAttributeKey = strLuteceUserAttributeKey;
-		this._strLuteceUserAttributeValue = strLuteceUserAttributeValue;
-		this._strRole = strRole;
-	}
+	
 	
 	/** The str lutece user attribute key. */
 	private String _strLuteceUserAttributeKey;
@@ -63,6 +51,53 @@ public class AutomaticRoleConfiguration {
 	
 	/** The str role. */
 	private String _strRole;
+	
+	/** The configuration predicate. */
+	private ConfigurationPredicate _configurationPredicate;
+	
+	/** The b automatic. */
+	private Boolean _bAutomatic;
+	
+	
+
+
+	
+
+
+	/**
+	 * Instantiates a new automatic role configuration.
+	 *
+	 * @param strLuteceUserAttributeKey the str lutece user attribute key
+	 * @param strLuteceUserAttributeValue the str lutece user attribute value
+	 * @param strRole the str role
+	 * @param configurationPredicate the configuration predicate
+	 * @param bAutomatic the b automatic
+	 */
+	public AutomaticRoleConfiguration(String strLuteceUserAttributeKey, String strLuteceUserAttributeValue,
+			String strRole,ConfigurationPredicate configurationPredicate,Boolean bAutomatic) {
+		super();
+		this._strLuteceUserAttributeKey = strLuteceUserAttributeKey;
+		this._strLuteceUserAttributeValue = strLuteceUserAttributeValue;
+		this._strRole = strRole;
+		this._configurationPredicate=configurationPredicate;
+		this._bAutomatic=bAutomatic;
+	}
+
+	
+	/**
+	 * Instantiates a new automatic role configuration.
+
+	 * @param strRole the str role
+	 * @param configurationPredicate the configuration predicate
+	 * @param bAutomatic the b automatic
+	 */
+	public AutomaticRoleConfiguration(String strRole,ConfigurationPredicate configurationPredicate,Boolean bAutomatic) {
+		 
+		this(null, null,
+				 strRole,configurationPredicate,bAutomatic); 
+
+	}
+	
 	
 	
 	/**
@@ -118,6 +153,31 @@ public class AutomaticRoleConfiguration {
 	public void setRole(String _strRole) {
 		this._strRole = _strRole;
 	}
+	
+	
+
+	/**
+	 * Gets the configuration predicate.
+	 *
+	 * @return ConfigurationPredicate
+	 */
+	public ConfigurationPredicate getConfigurationPredicate() {
+		return _configurationPredicate;
+	}
+
+
+
+	/**
+	 * Checks if is automatic.
+	 *
+	 * @return true, if is automatic
+	 */
+	public Boolean isAutomatic() {
+		return _bAutomatic;
+	}
+
+
+
 	
 	
 	

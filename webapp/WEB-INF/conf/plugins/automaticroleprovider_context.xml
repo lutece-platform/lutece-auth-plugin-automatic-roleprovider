@@ -4,17 +4,32 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
 
-
+    <bean id="automaticroleprovider.defaultConfigurationPredicate" class="fr.paris.lutece.plugins.automaticroleprovider.service.DefaultConfigurationPredicate"/>
+     
+     
+     
      <bean id="automaticroleprovider.AutomaticRoleConfiguration.role_user_validated" class="fr.paris.lutece.plugins.automaticroleprovider.service.AutomaticRoleConfiguration">
         <constructor-arg name="strLuteceUserAttributeKey" type="java.lang.String" value="user.validated" />
         <constructor-arg name="strLuteceUserAttributeValue" type="java.lang.String" value="true" />
-        <constructor-arg name="strRole" type="java.lang.String" value="role_user_validated" />
+        <constructor-arg name="strRole" type="java.lang.String" value="role_user_validated" /> 
+        <constructor-arg name="configurationPredicate"  ref="automaticroleprovider.defaultConfigurationPredicate" />
+        <constructor-arg name="bAutomatic" type="java.lang.Boolean" value="false" /> 
+           
     </bean>
+    
+     <bean id="automaticroleprovider.AutomaticRoleConfiguration.defaultRole" class="fr.paris.lutece.plugins.automaticroleprovider.service.AutomaticRoleConfiguration">
+        <constructor-arg name="strRole" type="java.lang.String" value="defaultRole" /> 
+        <constructor-arg name="configurationPredicate"  ref="automaticroleprovider.defaultConfigurationPredicate" />
+        <constructor-arg name="bAutomatic" type="java.lang.Boolean" value="true" />   
+    </bean>
+    
+    
 
      <bean id="automaticroleprovider.automaticRoleProvider"  class="fr.paris.lutece.plugins.automaticroleprovider.service.AutomaticRoleProvider" >
 		<constructor-arg name="listAutomaticRoleConfiguration" >
 			<list>
 				<ref bean="automaticroleprovider.AutomaticRoleConfiguration.role_user_validated" />
+				<ref bean="automaticroleprovider.AutomaticRoleConfiguration.defaultRole" />
 			</list>
 		  </constructor-arg>
 	</bean>
