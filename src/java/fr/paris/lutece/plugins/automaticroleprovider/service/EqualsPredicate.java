@@ -6,11 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.portal.service.security.LuteceUser;
 
-public class DefaultConfigurationPredicate implements ConfigurationPredicate{
+public class EqualsPredicate implements ConfigurationPredicate{
 
 	BiPredicate<LuteceUser,AutomaticRoleConfiguration>  _biPredicate;
 	
-	public DefaultConfigurationPredicate() {
+	public EqualsPredicate() {
 		 
 		_biPredicate = (aUser, roleConfiguration) -> {
 	    	  return (roleConfiguration.isAutomatic()!=null && roleConfiguration.isAutomatic()) ||( !StringUtils.isEmpty(aUser.getUserInfo(roleConfiguration.getLuteceUserAttributeKey()))

@@ -75,12 +75,30 @@ public class AutomaticRoleConfiguration {
 	 */
 	public AutomaticRoleConfiguration(String strLuteceUserAttributeKey, String strLuteceUserAttributeValue,
 			String strRole,ConfigurationPredicate configurationPredicate,Boolean bAutomatic) {
-		super();
+		
 		this._strLuteceUserAttributeKey = strLuteceUserAttributeKey;
 		this._strLuteceUserAttributeValue = strLuteceUserAttributeValue;
 		this._strRole = strRole;
 		this._configurationPredicate=configurationPredicate;
 		this._bAutomatic=bAutomatic;
+	}
+	
+	
+	
+	/**
+	 * Instantiates a new automatic role configuration.
+	 *
+	 * @param strLuteceUserAttributeKey the str lutece user attribute key
+	 * @param strLuteceUserAttributeValue the str lutece user attribute value
+	 * @param strRole the str role
+	 * @param configurationPredicate the configuration predicate
+	 * @param bAutomatic the b automatic
+	 */
+	public AutomaticRoleConfiguration(String strLuteceUserAttributeKey, String strLuteceUserAttributeValue,
+			String strRole,ConfigurationPredicate configurationPredicate) {
+		
+		this(strLuteceUserAttributeKey,strLuteceUserAttributeValue,
+				 strRole, configurationPredicate,false); 
 	}
 
 	

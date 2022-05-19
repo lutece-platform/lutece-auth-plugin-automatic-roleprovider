@@ -37,9 +37,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.BiPredicate;
-
-import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.plugins.mylutece.business.LuteceUserRoleDescription;
 import fr.paris.lutece.plugins.mylutece.service.IMyLuteceExternalRolesProvider;
@@ -47,7 +44,6 @@ import fr.paris.lutece.portal.business.role.Role;
 import fr.paris.lutece.portal.business.role.RoleHome;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 
 
