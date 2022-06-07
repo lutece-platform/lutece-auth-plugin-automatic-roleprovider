@@ -55,7 +55,10 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
     
     /** The list automatic role configuration. */
     private List<AutomaticRoleConfiguration> _listAutomaticRoleConfiguration;
-    // Properties for page titles
+    
+    
+	
+	// Properties for page titles
     private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessage";
     private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessageAutomatic";
     
@@ -72,6 +75,10 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
 	public AutomaticRoleProvider(List<AutomaticRoleConfiguration>  listAutomaticRoleConfiguration) {
 		super();
 		this._listAutomaticRoleConfiguration = listAutomaticRoleConfiguration;
+		
+		
+		
+		
 	
 	}
 
@@ -147,7 +154,10 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
     }
     
     
-    
+    public List<AutomaticRoleConfiguration> getListAutomaticRoleConfiguration() {
+		return _listAutomaticRoleConfiguration;
+	}
+
        
     
     
