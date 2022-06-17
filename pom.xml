@@ -13,24 +13,13 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>Lutece intraparis-roleprovider plugin</name>
     <repositories>
-         <repository>
-             <id>lutece</id>
-             <name>luteceRepository</name>
-             <url>https://dev.lutece.paris.fr/maven_repository</url>
-             <layout>default</layout>
-         </repository>
-         <repository>
-             <id>luteceSnapshot</id>
-             <name>luteceSnapshot</name>
-             <url>https://dev.lutece.paris.fr/snapshot_repository</url>
-             <snapshots>
-                 <enabled>true</enabled>
-             </snapshots>
-             <releases>
-                 <enabled>false</enabled>
-             </releases>
-         </repository>        
-     </repositories>
+        <repository>
+            <id>lutece</id>
+            <name>luteceRepository</name>
+            <url>http://dev.lutece.paris.fr/maven_repository</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
