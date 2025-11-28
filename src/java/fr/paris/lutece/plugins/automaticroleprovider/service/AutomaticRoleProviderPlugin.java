@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2021, Mairie de Paris
+ * Copyright (c) 2002-2025, Mairie de Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,44 +33,38 @@
  */
 package fr.paris.lutece.plugins.automaticroleprovider.service;
 
-
-
 import fr.paris.lutece.portal.business.role.Role;
 import fr.paris.lutece.portal.business.role.RoleHome;
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
-
+import jakarta.enterprise.inject.spi.CDI;
 
 /**
- * class IdentityPlugin
+ * AutomaticRoleProviderPlugin
  */
 public class AutomaticRoleProviderPlugin extends Plugin
 {
+    private static final long serialVersionUID = 1L;
     public static final String PLUGIN_NAME = "automaticroleprovider";
-    private static final String AUTOMATIC_ROLE_PROVIDER_BEAN="automaticroleprovider.automaticRoleProvider";
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void init(  )
+    public void init( )
     {
-     //call get Instance for init singleton	
-    	AutomaticRoleProvider provider=SpringContextService.getBean(AUTOMATIC_ROLE_PROVIDER_BEAN);
-    	
-    	if(provider!=null && provider.getListAutomaticRoleConfiguration()!=null) {
-    		
-    		 //create Role if not defined
-    		  provider.getListAutomaticRoleConfiguration().stream().filter(
-    																	x->!RoleHome.findExistRole( x.getRole()))
-    														.forEach(
-    																	x->{ Role role= new Role(); role.setRole(x.getRole()); role.setRoleDescription(x.getRole()) ; role.setWorkgroup( AdminWorkgroupService.ALL_GROUPS );RoleHome.create(role);
-    																	   }
-    																	);
-    		}
-    		
-    	}
-    	
-    
+        AutomaticRoleProvider provider = CDI.current( ).select( AutomaticRoleProvider.class ).get( );
+        if ( provider != null && provider.getListAutomaticRoleConfiguration( ) != null )
+        {
+            // create Role if not defined
+            provider.getListAutomaticRoleConfiguration( ).stream( ).filter( x -> !RoleHome.findExistRole( x.getRole( ) ) ).forEach( x -> {
+                Role role = new Role( );
+                role.setRole( x.getRole( ) );
+                role.setRoleDescription( x.getRole( ) );
+                role.setWorkgroup( AdminWorkgroupService.ALL_GROUPS );
+                RoleHome.create( role );
+            } );
+        }
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2022, City of Paris
+ * Copyright (c) 2002-2025, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,171 +33,132 @@
  */
 package fr.paris.lutece.plugins.automaticroleprovider.service;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class AutomaticRoleConfiguration.
  */
-public class AutomaticRoleConfiguration {
+public class AutomaticRoleConfiguration
+{
 
-	
-	
-	
-	/** The str lutece user attribute key. */
-	private String _strLuteceUserAttributeKey;
-	
-	/** The str lutece user attribute value. */
-	private String _strLuteceUserAttributeValue;
-	
-	/** The str role. */
-	private String _strRole;
-	
-	/** The configuration predicate. */
-	private ConfigurationPredicate _configurationPredicate;
-	
-	/** The b automatic. */
-	private Boolean _bAutomatic;
-	
-	
+    /** The str lutece user attribute key. */
+    private String _strLuteceUserAttributeKey;
 
+    /** The str lutece user attribute value. */
+    private String _strLuteceUserAttributeValue;
 
-	
+    /** The str role. */
+    private String _strRole;
 
+    /** The configuration predicate. */
+    private ConfigurationPredicate _configurationPredicate;
 
-	/**
-	 * Instantiates a new automatic role configuration.
-	 *
-	 * @param strLuteceUserAttributeKey the str lutece user attribute key
-	 * @param strLuteceUserAttributeValue the str lutece user attribute value
-	 * @param strRole the str role
-	 * @param configurationPredicate the configuration predicate
-	 * @param bAutomatic the b automatic
-	 */
-	public AutomaticRoleConfiguration(String strLuteceUserAttributeKey, String strLuteceUserAttributeValue,
-			String strRole,ConfigurationPredicate configurationPredicate,Boolean bAutomatic) {
-		
-		this._strLuteceUserAttributeKey = strLuteceUserAttributeKey;
-		this._strLuteceUserAttributeValue = strLuteceUserAttributeValue;
-		this._strRole = strRole;
-		this._configurationPredicate=configurationPredicate;
-		this._bAutomatic=bAutomatic;
-	}
-	
-	
-	
-	/**
-	 * Instantiates a new automatic role configuration.
-	 *
-	 * @param strLuteceUserAttributeKey the str lutece user attribute key
-	 * @param strLuteceUserAttributeValue the str lutece user attribute value
-	 * @param strRole the str role
-	 * @param configurationPredicate the configuration predicate
-	 * @param bAutomatic the b automatic
-	 */
-	public AutomaticRoleConfiguration(String strLuteceUserAttributeKey, String strLuteceUserAttributeValue,
-			String strRole,ConfigurationPredicate configurationPredicate) {
-		
-		this(strLuteceUserAttributeKey,strLuteceUserAttributeValue,
-				 strRole, configurationPredicate,false); 
-	}
+    /** The b automatic. */
+    private Boolean _bAutomatic;
 
-	
-	/**
-	 * Instantiates a new automatic role configuration.
+    /**
+     * Instantiates a new automatic role configuration.
+     *
+     * @param strLuteceUserAttributeKey
+     *            the str lutece user attribute key
+     * @param strLuteceUserAttributeValue
+     *            the str lutece user attribute value
+     * @param strRole
+     *            the str role
+     * @param configurationPredicate
+     *            the configuration predicate
+     * @param bAutomatic
+     *            the b automatic
+     */
+    public AutomaticRoleConfiguration( String strLuteceUserAttributeKey, String strLuteceUserAttributeValue, String strRole,
+            ConfigurationPredicate configurationPredicate, Boolean bAutomatic )
+    {
+        this._strLuteceUserAttributeKey = strLuteceUserAttributeKey;
+        this._strLuteceUserAttributeValue = strLuteceUserAttributeValue;
+        this._strRole = strRole;
+        this._configurationPredicate = configurationPredicate;
+        this._bAutomatic = bAutomatic;
+    }
 
-	 * @param strRole the str role
-	 * @param configurationPredicate the configuration predicate
-	 * @param bAutomatic the b automatic
-	 */
-	public AutomaticRoleConfiguration(String strRole,ConfigurationPredicate configurationPredicate,Boolean bAutomatic) {
-		 
-		this(null, null,
-				 strRole,configurationPredicate,bAutomatic); 
+    /**
+     * Gets the lutece user attribute key.
+     *
+     * @return the lutece user attribute key
+     */
+    public String getLuteceUserAttributeKey( )
+    {
+        return _strLuteceUserAttributeKey;
+    }
 
-	}
-	
-	
-	
-	/**
-	 * Gets the lutece user attribute key.
-	 *
-	 * @return the lutece user attribute key
-	 */
-	public String getLuteceUserAttributeKey() {
-		return _strLuteceUserAttributeKey;
-	}
-	
-	/**
-	 * Sets the lutece user attribute key.
-	 *
-	 * @param _strLuteceUserAttributeKey the new lutece user attribute key
-	 */
-	public void setLuteceUserAttributeKey(String _strLuteceUserAttributeKey) {
-		this._strLuteceUserAttributeKey = _strLuteceUserAttributeKey;
-	}
-	
-	/**
-	 * Gets the lutece user attribute value.
-	 *
-	 * @return the lutece user attribute value
-	 */
-	public String getLuteceUserAttributeValue() {
-		return _strLuteceUserAttributeValue;
-	}
-	
-	/**
-	 * Sets the lutece user attribute value.
-	 *
-	 * @param _strLuteceUserAttributeValue the new lutece user attribute value
-	 */
-	public void setLuteceUserAttributeValue(String _strLuteceUserAttributeValue) {
-		this._strLuteceUserAttributeValue = _strLuteceUserAttributeValue;
-	}
-	
-	/**
-	 * Gets the role.
-	 *
-	 * @return the role
-	 */
-	public String getRole() {
-		return _strRole;
-	}
-	
-	/**
-	 * Sets the role.
-	 *
-	 * @param _strRole the new role
-	 */
-	public void setRole(String _strRole) {
-		this._strRole = _strRole;
-	}
-	
-	
+    /**
+     * Sets the lutece user attribute key.
+     *
+     * @param _strLuteceUserAttributeKey
+     *            the new lutece user attribute key
+     */
+    public void setLuteceUserAttributeKey( String _strLuteceUserAttributeKey )
+    {
+        this._strLuteceUserAttributeKey = _strLuteceUserAttributeKey;
+    }
 
-	/**
-	 * Gets the configuration predicate.
-	 *
-	 * @return ConfigurationPredicate
-	 */
-	public ConfigurationPredicate getConfigurationPredicate() {
-		return _configurationPredicate;
-	}
+    /**
+     * Gets the lutece user attribute value.
+     *
+     * @return the lutece user attribute value
+     */
+    public String getLuteceUserAttributeValue( )
+    {
+        return _strLuteceUserAttributeValue;
+    }
 
+    /**
+     * Sets the lutece user attribute value.
+     *
+     * @param _strLuteceUserAttributeValue
+     *            the new lutece user attribute value
+     */
+    public void setLuteceUserAttributeValue( String _strLuteceUserAttributeValue )
+    {
+        this._strLuteceUserAttributeValue = _strLuteceUserAttributeValue;
+    }
 
+    /**
+     * Gets the role.
+     *
+     * @return the role
+     */
+    public String getRole( )
+    {
+        return _strRole;
+    }
 
-	/**
-	 * Checks if is automatic.
-	 *
-	 * @return true, if is automatic
-	 */
-	public Boolean isAutomatic() {
-		return _bAutomatic;
-	}
+    /**
+     * Sets the role.
+     *
+     * @param _strRole
+     *            the new role
+     */
+    public void setRole( String _strRole )
+    {
+        this._strRole = _strRole;
+    }
 
+    /**
+     * Gets the configuration predicate.
+     *
+     * @return ConfigurationPredicate
+     */
+    public ConfigurationPredicate getConfigurationPredicate( )
+    {
+        return _configurationPredicate;
+    }
 
-
-	
-	
-	
+    /**
+     * Checks if is automatic.
+     *
+     * @return true, if is automatic
+     */
+    public Boolean isAutomatic( )
+    {
+        return _bAutomatic;
+    }
 
 }

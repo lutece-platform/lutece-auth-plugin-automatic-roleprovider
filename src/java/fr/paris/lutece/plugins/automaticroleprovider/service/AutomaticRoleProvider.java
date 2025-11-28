@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2022, City of Paris
+ * Copyright (c) 2002-2025, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,127 +38,132 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.microprofile.config.Config;
+
 import fr.paris.lutece.plugins.mylutece.business.LuteceUserRoleDescription;
 import fr.paris.lutece.plugins.mylutece.service.IMyLuteceExternalRolesProvider;
 import fr.paris.lutece.portal.business.role.Role;
 import fr.paris.lutece.portal.business.role.RoleHome;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.security.LuteceUser;
-
-
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * The Class AutomaticRoleProvider.
  */
+@ApplicationScoped
+@Named( "automaticroleprovider.automaticRoleProvider" )
 public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider 
 {
-    
+
+    private static final String CONFIGURATIONS_KEY = "automaticroleprovider.configurations";
+    private static final String CONFIGURATION_PREFIX = "automaticroleprovider.roleConfiguration.";
+    private static final String CONFIGURATION_ROLE_SUFFIX = ".role";
+    private static final String CONFIGURATION_PREDICATE_SUFFIX = ".predicate";
+    private static final String CONFIGURATION_AUTOMATIC_SUFFIX = ".automatic";
+    private static final String CONFIGURATION_USER_ATTRIBUTE_KEY_SUFFIX = ".luteceUserAttributeKey";
+    private static final String CONFIGURATION_USER_ATTRIBUTE_VALUE_SUFFIX = ".luteceUserAttributeValue";
+
+    // Properties for page titles
+    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessage";
+    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessageAutomatic";
+    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_ERROR = "automaticroleprovider.automaticRoleProvider.roleDescriptionError";
+
     /** The list automatic role configuration. */
     private List<AutomaticRoleConfiguration> _listAutomaticRoleConfiguration;
     
+    @Inject
+    private Config _config;
     
-	
-	// Properties for page titles
-    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessage";
-    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC = "automaticroleprovider.automaticRoleProvider.roleDescriptionMessageAutomatic";
-    
-    private static final String PROPERTY_PAGE_ROLE_DESCRIPTION_ERROR = "automaticroleprovider.automaticRoleProvider.roleDescriptionError";
-     
-   
-    
-	
-	/**
-	 * Instantiates a new automatic role provider.
-	 *
-	 * @param listAutomaticRoleConfiguration the list automatic role configuration
-	 */
-	public AutomaticRoleProvider(List<AutomaticRoleConfiguration>  listAutomaticRoleConfiguration) {
-		super();
-		this._listAutomaticRoleConfiguration = listAutomaticRoleConfiguration;
-		
-		
-		
-		
-	
-	}
-
-	/**
-     * {@inheritDoc}
-     */
-    @Override
-    public Collection<String> providesRoles( LuteceUser user ) 
+    @PostConstruct
+    private void postConstruct( )
     {
-       
-    	 List<String> listRoles=new ArrayList<String>();
-    	 
-    	 if(this._listAutomaticRoleConfiguration!=null)
-         {
-   			this._listAutomaticRoleConfiguration.stream().filter(x->  x.getConfigurationPredicate().getPredicate().test(user, x)).forEach(x -> listRoles.add(x.getRole()));
-
-         }
-   	  
-   	  return listRoles;
-         
-  
-    	
+        List<String> configurations = _config.getOptionalValues( CONFIGURATIONS_KEY, String.class ).orElse( new ArrayList<String>( ) );
+        _listAutomaticRoleConfiguration  = new ArrayList<AutomaticRoleConfiguration>( );
+        for ( String configuration : configurations )
+        {
+            addConfiguration( configuration);
+        }
     }
     
+    private void addConfiguration(String strKey)
+    {
+        String strRole = _config.getValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_ROLE_SUFFIX, String.class );
+        String strPredicate = _config.getValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_PREDICATE_SUFFIX, String.class );
+        ConfigurationPredicate configurationPredicate = CDI.current( ).select( ConfigurationPredicate.class, NamedLiteral.of( strPredicate ) ).get( );
+        boolean bAutomatic = _config.getOptionalValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_AUTOMATIC_SUFFIX, Boolean.class ).orElse( false );
+        String strUserAttributeKey = _config.getOptionalValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_USER_ATTRIBUTE_KEY_SUFFIX, String.class ).orElse( null );
+        String strUserAttributeValue = _config.getOptionalValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_USER_ATTRIBUTE_VALUE_SUFFIX, String.class ).orElse( null );
+        _listAutomaticRoleConfiguration.add( new AutomaticRoleConfiguration( strUserAttributeKey, strUserAttributeValue, strRole, configurationPredicate, bAutomatic ) ); 
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<LuteceUserRoleDescription> getLuteceUserRolesProvided(Locale locale)
+    public Collection<String> providesRoles( LuteceUser user )
     {
-    	
-    	List<LuteceUserRoleDescription> lisDescriptions=new ArrayList<LuteceUserRoleDescription>();
-    	if(this._listAutomaticRoleConfiguration!=null)
+        List<String> listRoles = new ArrayList<String>( );
+
+        if ( this._listAutomaticRoleConfiguration != null )
         {
-			this._listAutomaticRoleConfiguration.forEach(x -> {
-				Role role = RoleHome.findByPrimaryKey(x.getRole());
-				if (role != null) {
-					if(x.isAutomatic()!=null && x.isAutomatic() )
-					{
-						//Automatic assignment
-						lisDescriptions.add(
-								new LuteceUserRoleDescription(role, LuteceUserRoleDescription.TYPE_AUTOMATIC_ASSIGNMENT,
-										I18nService.getLocalizedString(PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC,locale)));
-				
-					}
-					else
-					{
-					//conditional assignment
-				 	lisDescriptions.add(
-							new LuteceUserRoleDescription(role, LuteceUserRoleDescription.TYPE_CONDITIONAL_ASSIGNMENT,
-									I18nService.getLocalizedString(PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE, new Object[]{x.getLuteceUserAttributeKey(), x.getLuteceUserAttributeValue()},locale)));
-					}
-			     }
-				else
-				{
-					Role roleEmty=new Role();
-					roleEmty.setRole(x.getRole());
-					lisDescriptions.add(
-							new LuteceUserRoleDescription(roleEmty, LuteceUserRoleDescription.TYPE_CONDITIONAL_ASSIGNMENT,
-									I18nService.getLocalizedString(PROPERTY_PAGE_ROLE_DESCRIPTION_ERROR,locale)));
-	
-					
-				}
-
-			}
-
-			);
+            this._listAutomaticRoleConfiguration.stream( ).filter( x -> x.getConfigurationPredicate( ).getPredicate( ).test( user, x ) )
+                    .forEach( x -> listRoles.add( x.getRole( ) ) );
         }
-    	
-    	
-    	return lisDescriptions;
-    	
-    }
-    
-    
-    public List<AutomaticRoleConfiguration> getListAutomaticRoleConfiguration() {
-		return _listAutomaticRoleConfiguration;
-	}
 
-       
-    
-    
+        return listRoles;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<LuteceUserRoleDescription> getLuteceUserRolesProvided( Locale locale )
+    {
+        List<LuteceUserRoleDescription> lisDescriptions = new ArrayList<LuteceUserRoleDescription>( );
+        if ( this._listAutomaticRoleConfiguration != null )
+        {
+            this._listAutomaticRoleConfiguration.forEach( x -> {
+                Role role = RoleHome.findByPrimaryKey( x.getRole( ) );
+                if ( role != null )
+                {
+                    if ( x.isAutomatic( ) != null && x.isAutomatic( ) )
+                    {
+                        // Automatic assignment
+                        lisDescriptions.add( new LuteceUserRoleDescription( role, LuteceUserRoleDescription.TYPE_AUTOMATIC_ASSIGNMENT,
+                                I18nService.getLocalizedString( PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE_AUTOMATIC, locale ) ) );
+
+                    }
+                    else
+                    {
+                        // conditional assignment
+                        lisDescriptions.add( new LuteceUserRoleDescription( role, LuteceUserRoleDescription.TYPE_CONDITIONAL_ASSIGNMENT,
+                                I18nService.getLocalizedString( PROPERTY_PAGE_ROLE_DESCRIPTION_MESSAGE, new Object [ ] {
+                                        x.getLuteceUserAttributeKey( ), x.getLuteceUserAttributeValue( )
+                        }, locale ) ) );
+                    }
+                }
+                else
+                {
+                    Role roleEmty = new Role( );
+                    roleEmty.setRole( x.getRole( ) );
+                    lisDescriptions.add( new LuteceUserRoleDescription( roleEmty, LuteceUserRoleDescription.TYPE_CONDITIONAL_ASSIGNMENT,
+                            I18nService.getLocalizedString( PROPERTY_PAGE_ROLE_DESCRIPTION_ERROR, locale ) ) );
+
+                }
+            }
+            );
+        }
+        return lisDescriptions;
+    }
+
+    public List<AutomaticRoleConfiguration> getListAutomaticRoleConfiguration( )
+    {
+        return _listAutomaticRoleConfiguration;
+    }    
 }
