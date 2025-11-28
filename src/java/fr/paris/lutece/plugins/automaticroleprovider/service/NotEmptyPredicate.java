@@ -5,22 +5,28 @@ import java.util.function.BiPredicate;
 import org.apache.commons.lang3.StringUtils;
 
 import fr.paris.lutece.portal.service.security.LuteceUser;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 
-public class NotEmptyPredicate implements ConfigurationPredicate{
+@ApplicationScoped
+@Named( "automaticroleprovider.notEmptyPredicate" )
+public class NotEmptyPredicate implements ConfigurationPredicate
+{
 
-	BiPredicate<LuteceUser,AutomaticRoleConfiguration>  _biPredicate;
-	
-	public NotEmptyPredicate() {
-		 
-		_biPredicate = (aUser, roleConfiguration) -> {
-	    	  return (roleConfiguration.isAutomatic()!=null && roleConfiguration.isAutomatic()) ||( !StringUtils.isEmpty(aUser.getUserInfo(roleConfiguration.getLuteceUserAttributeKey())));
-	      };
-	}
+    private BiPredicate<LuteceUser, AutomaticRoleConfiguration> _biPredicate;
 
-	@Override
-	public BiPredicate<LuteceUser, AutomaticRoleConfiguration> getPredicate() {
+    public NotEmptyPredicate( )
+    {
+        _biPredicate = ( aUser, roleConfiguration ) -> {
+            return ( roleConfiguration.isAutomatic( ) != null && roleConfiguration.isAutomatic( ) )
+                    || ( !StringUtils.isEmpty( aUser.getUserInfo( roleConfiguration.getLuteceUserAttributeKey( ) ) ) );
+        };
+    }
 
-		return _biPredicate;
-	}
+    @Override
+    public BiPredicate<LuteceUser, AutomaticRoleConfiguration> getPredicate( )
+    {
+        return _biPredicate;
+    }
 
 }
