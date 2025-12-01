@@ -62,7 +62,6 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
 {
 
     private static final String CONFIGURATIONS_KEY = "automaticroleprovider.configurations";
-    private static final String CONFIGURATION_PREFIX = "automaticroleprovider.roleConfiguration.";
     private static final String CONFIGURATION_ROLE_SUFFIX = ".role";
     private static final String CONFIGURATION_PREDICATE_SUFFIX = ".predicate";
     private static final String CONFIGURATION_AUTOMATIC_SUFFIX = ".automatic";
@@ -93,12 +92,12 @@ public class AutomaticRoleProvider implements IMyLuteceExternalRolesProvider
     
     private void addConfiguration(String strKey)
     {
-        String strRole = _config.getValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_ROLE_SUFFIX, String.class );
-        String strPredicate = _config.getValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_PREDICATE_SUFFIX, String.class );
+        String strRole = _config.getValue( strKey + CONFIGURATION_ROLE_SUFFIX, String.class );
+        String strPredicate = _config.getValue( strKey + CONFIGURATION_PREDICATE_SUFFIX, String.class );
         ConfigurationPredicate configurationPredicate = CDI.current( ).select( ConfigurationPredicate.class, NamedLiteral.of( strPredicate ) ).get( );
-        boolean bAutomatic = _config.getOptionalValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_AUTOMATIC_SUFFIX, Boolean.class ).orElse( false );
-        String strUserAttributeKey = _config.getOptionalValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_USER_ATTRIBUTE_KEY_SUFFIX, String.class ).orElse( null );
-        String strUserAttributeValue = _config.getOptionalValue( CONFIGURATION_PREFIX + strKey + CONFIGURATION_USER_ATTRIBUTE_VALUE_SUFFIX, String.class ).orElse( null );
+        boolean bAutomatic = _config.getOptionalValue( strKey + CONFIGURATION_AUTOMATIC_SUFFIX, Boolean.class ).orElse( false );
+        String strUserAttributeKey = _config.getOptionalValue( strKey + CONFIGURATION_USER_ATTRIBUTE_KEY_SUFFIX, String.class ).orElse( null );
+        String strUserAttributeValue = _config.getOptionalValue( strKey + CONFIGURATION_USER_ATTRIBUTE_VALUE_SUFFIX, String.class ).orElse( null );
         _listAutomaticRoleConfiguration.add( new AutomaticRoleConfiguration( strUserAttributeKey, strUserAttributeValue, strRole, configurationPredicate, bAutomatic ) ); 
     }
 
